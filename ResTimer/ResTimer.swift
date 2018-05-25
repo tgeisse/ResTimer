@@ -46,7 +46,7 @@ class ResTimer {
     
     var state: TimerState {
         if isStopped {
-            if startingTime != nil { return .paused }
+            if accumulatedTime > 0 { return .paused }
             else { return .stopped }
         } else {
             return .running
@@ -82,6 +82,7 @@ class ResTimer {
     func stop() {
         if isStopped { return }
         
+        startingTime = nil
         timer?.invalidate()
         accumulatedTime += timeSinceStarting
         isStopped = true
@@ -89,8 +90,7 @@ class ResTimer {
     
     func reset() {
         if !isStopped { stop() }
-        adjustAccumulatedTime(to: 0.0)
-        startingTime = nil
+        adjustAccumulatedTime(to: 0)
     }
     
     func adjustAccumulatedTime(to: Double) {
